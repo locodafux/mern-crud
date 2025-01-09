@@ -1,20 +1,10 @@
 import './App.css';
+import Home from './Pages/Home.js';
 
-
-function MyButton() {
+export default function App() {
   return (
-    <button>Click Me</button>
-  )
-}
-
-
-function App() {
-  return (
-    <div class = "screen">
-      <h1>Welcome to my app</h1>
-      <MyButton />
+      <div class = "screen">
+      <Home />
     </div>
   );
 }
-
-export default App;
