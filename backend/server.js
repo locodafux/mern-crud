@@ -2,13 +2,10 @@ import express from 'express';
 var app = express();
 import { readFile } from 'fs'; 
 import path from 'path';  
+
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Endpoint to Get a list of users
 app.get('/getUsers', function(req, res){
-    readFile(__dirname + "/" + "users.json", 'utf8', function(err, data){
-        console.log(data);
-        res.end(data); 
-    });
 })
 
 // Create a server to listen at port 8080
