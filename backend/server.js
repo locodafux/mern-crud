@@ -1,7 +1,17 @@
 import express from 'express'; 
-const app = express();
+import cors from 'cors';
 import { readFile } from 'fs'; 
 import path from 'path';  
+
+
+const app = express();
+app.options('*', cors());
+
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your Vue app's origin
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  }));
 
 
 const friends = {

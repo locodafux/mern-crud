@@ -24,22 +24,20 @@
   },
   created() {
     this.fetchJoke();
-    this.intervalId = setInterval(this.fetchJoke, 5000);
   },
   beforeDestroy() {
     clearInterval(this.intervalId); // Clear interval when component is destroyed
   },
   methods: {
-    async fetchJoke() {
-      this.joke = null
-      const id = Math.floor(Math.random() * 500)
-      try {
-        const response = await axios.get('https://api.sampleapis.com/jokes/goodJokes');
-          this.joke = response.data[id]
-      } catch (error) {
-        console.log(error)
-      }
-    },
+  // Example of fetching friends list
+async fetchJoke() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8080/friends');
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
   },
   };
   </script>
