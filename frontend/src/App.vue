@@ -32,7 +32,7 @@
   // Example of fetching friends list
 async fetchJoke() {
   try {
-    const response = await axios.get('http://127.0.0.1:8080/friends');
+    const response = await axios.get('http://127.0.0.1:8080/api/friends');
     console.log(response.data);
   } catch (error) {
     console.log(error);
