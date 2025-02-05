@@ -1,4 +1,5 @@
 import express from 'express'; 
+import { uploadProcessedData } from '../lib/firebase.js';
 
 const router = express.Router(); 
 
@@ -9,8 +10,9 @@ const friends = {
     'banana': 'enemy',
 };
 
-router.get('/friends', (req, res) => {
-    res.status(200).send(friends);
+router.get('/friends', async (req, res) => {
+    await uploadProcessedData();
+    res.status(200).send('success');
 });
 
 router.get('/friends/:name', (req, res) => {

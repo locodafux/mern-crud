@@ -1,5 +1,11 @@
-import { initializeApp, getApp, getApps } from 'firebase/app';
+// Import Firebase functions
+import { initializeApp } from 'firebase/app';  // For initializing Firebase app
+import { getFirestore, doc, setDoc, Timestamp } from 'firebase/firestore';  // For Firestore operations
+import * as dotenv from 'dotenv';
 
+dotenv.config()
+
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -10,14 +16,27 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-let app;
+const app = initializeApp(firebaseConfig);
 
-if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);  
-} else {
-  app = getApp();  
-}
+const db = getFirestore(app);
 
+const uploadProcessedData = async () => {
+  const dataToUpload = {
+    key1: "test",
+    createdAt: Timestamp.fromDate(new Date()) 
+  };
+
+  const documentRef = doc(db, collectionName, documentId);
+
+  try {
+    await setDoc(documentRef, dataToUpload, { merge: true });
+    console.log("Data uploaded successfully.");
+  } catch (error) {
+    console.error("Error uploading data:", error);
+  }
+};
+
+// Helper function to retrieve Firebase app
 const getFirebaseApp = () => app;
 
-export { app, getFirebaseApp }
+export { app, getFirebaseApp, uploadProcessedData };
