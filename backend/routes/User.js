@@ -3,18 +3,6 @@ import { uploadProcessedData } from '../lib/firebase.js';
 
 const router = express.Router(); 
 
-const friends = {
-    'james': 'friend',
-    'larry': 'friend',
-    'lucy': 'friend',
-    'banana': 'enemy',
-};
-
-router.get('/friends', async (req, res) => {
-    await uploadProcessedData();
-    res.status(200).send('success');
-});
-
 router.get('/friends/:name', (req, res) => {
     const { name } = req.params;
     if (!name || !(name in friends)) {
