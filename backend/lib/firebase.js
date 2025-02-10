@@ -22,19 +22,26 @@ const db = getFirestore(app);
 const collectionName = 'roles';
 const documentId = '1';
 
-const uploadProcessedData = async () => {
-  const dataToUpload = {
-    key1: "test",
-    createdAt: Timestamp.fromDate(new Date()) 
-  };
+const uploadProcessedData = async (collectionName, documentId, data) => {
+  // const dataToUpload = {
+  //   key1: "test",
+  //   createdAt: Timestamp.fromDate(new Date()) 
+  // };
 
   const documentRef = doc(db, collectionName, documentId);
 
   try {
-    await setDoc(documentRef, dataToUpload, { merge: true });
+    await setDoc(documentRef, data, { merge: true });
     console.log("Data uploaded successfully.");
+    return [
+      message => "Data uploaded successfully."
+    ];
   } catch (error) {
     console.error("Error uploading data:", error);
+    return [
+      message => "Error uploading data",
+      error
+    ];
   }
 };
 

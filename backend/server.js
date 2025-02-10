@@ -3,6 +3,7 @@ import cors from 'cors';
 import { readFile } from 'fs'; 
 import path from 'path';  
 import userRoute from './routes/User.js'
+import userRoute from './routes/Role.js'
 const app = express();
 app.options('*', cors());
 
@@ -12,6 +13,7 @@ app.use(cors({
   }));
 
 app.use('/api',userRoute)
+app.use('/api',roleRoute)
 
 // Create a server to listen at port 8080
 const server = app.listen(8080, '127.0.0.1', function(){
