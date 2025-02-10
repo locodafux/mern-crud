@@ -9,13 +9,10 @@ router.get('/roles/:name', (req, res) => {
     res.status(200).send({ name: friends[name] });
 });
 
-router.post('/addrole', (req, res) => {
-    // const { role_name, } = req.body;
-    // if (!name || !status) {
-    //     return res.sendStatus(400); 
-    // }
-    // friends[name] = status;
-    // res.status(200).send(friends);
+router.post('/addRole', (req, res) => {
+    const { role_name, slug } = req.body;
+ 
+    console.log('New role added:', role_name, slug);
 
 });
 

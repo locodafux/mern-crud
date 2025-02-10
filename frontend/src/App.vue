@@ -1,47 +1,51 @@
 <template>
   <div>
-    <button @click="fetchJoke">Reload</button>
-    <div v-if="joke">
-      <h1>Joke</h1>
-      <p>Type: {{ joke.type }}</p>
-      <p>Setup: {{ joke.setup }}</p>
-      <p>Punchline: {{ joke.punchline }}</p>
-    </div>
-    <div v-else>
-      <p>Loading joke...</p>
-    </div>
+    <input type="text" v-model="role.roleName">
+    <input type="text" v-model="role.slug">
+    <button @click="addRole(role)">Add Role</button>
   </div>
 </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
+
+<script>
+import axios from 'axios';
+import { watch } from 'vue';
+
+export default {
   data() {
     return {
-      joke: null,
+      role: {
+        roleName: null,
+        slug: null,
+      }
     };
   },
   created() {
-    this.fetchJoke();
-  },
-  beforeDestroy() {
-    clearInterval(this.intervalId); // Clear interval when component is destroyed
+    // this.addRole();
   },
   methods: {
-  // Example of fetching friends list
-async fetchJoke() {
-  try {
-    const response = await axios.get('http://127.0.0.1:8080/api/friends');
-    console.log(response.data);
-  } catch (error) {
-    console.log(error);
-  }
-}
+    // Example of fetching friends list
+    async addRole({ roleName, slug }) {
+      try {
+        const response = await axios.post('http://127.0.0.1:8080/api/addRole', { role_name: roleName, slug });
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
   },
-  };
-  </script>
-  
-  <style scoped>
-  /* Add any styling here */
-  </style>
+  watch: {
+    'role.roleName': function (newValue) {
+      this.role.slug = newValue
+        .toLowerCase() 
+        .replace(/\s+/g, '-') 
+        .replace(/[^a-z0-9-]/g, ''); 
+    }
+  },
+
+};
+</script>
+
+<style scoped>
+/* Add any styling here */
+</style>

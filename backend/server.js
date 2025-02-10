@@ -1,21 +1,21 @@
 import express from 'express'; 
 import cors from 'cors';
-import { readFile } from 'fs'; 
-import path from 'path';  
 import userRoute from './routes/User.js'
-import userRoute from './routes/Role.js'
+import roleRoute from './routes/Roles.js'
 const app = express();
 app.options('*', cors());
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your Vue app's origin
+    origin: 'http://localhost:5173', 
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
   }));
+
+  app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
 app.use('/api',userRoute)
 app.use('/api',roleRoute)
 
-// Create a server to listen at port 8080
 const server = app.listen(8080, '127.0.0.1', function(){
     const host = server.address().address;
     const port = server.address().port;
