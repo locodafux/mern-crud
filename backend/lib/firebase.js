@@ -32,7 +32,6 @@ const uploadProcessedData = async (collectionName, documentId, data) => {
 
   try {
     await setDoc(documentRef, data, { merge: true });
-    console.log("Data uploaded successfully.");
     return [
       message => "Data uploaded successfully."
     ];
