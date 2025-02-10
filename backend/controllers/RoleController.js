@@ -6,11 +6,19 @@ export const getRoles = async (req, res) => {
     res.json({ message: "Success", data});
 }
 
-export const addRole = (req, res) => {
+export const addRole = async (req, res) => {
     const { roleName, slug } = req.body;
 
     console.log('New role added:', roleName, slug);
-    const msg = uploadProcessedData('roles', {role_name: roleName, slug})
-    
-    res.json({ message: msg, roleName, slug });
+
+    try {
+        const msg = await uploadProcessedData('roles', { role_name: roleName, slug });
+
+        const data = await getCollection('roles');
+
+        res.json({ message: msg, roleName, slug, data });
+    } catch (error) {
+        console.error('Error adding role:', error);
+        res.status(500).json({ message: 'Failed to add role', error: error.message });
+    }
 };
