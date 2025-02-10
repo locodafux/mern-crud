@@ -19,6 +19,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const collectionName = 'roles';
+const documentId = '1';
 
 const uploadProcessedData = async () => {
   const dataToUpload = {
