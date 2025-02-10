@@ -1,4 +1,10 @@
-import { uploadProcessedData } from "../lib/firebase.js";
+import { uploadProcessedData, getCollection } from "../lib/firebase.js";
+
+export const getRoles = async (req, res) => {
+    const data = await getCollection('roles');
+    console.log('data: ' + data)
+    res.json({ message: "Success", data});
+}
 
 export const addRole = (req, res) => {
     const { roleName, slug } = req.body;

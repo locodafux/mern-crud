@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const getNextId = async (collectionName) => {
-  const counterRef = doc(db, "metadata", collectionName+"_counter");
+  const counterRef = doc(db, "metadata", `${collectionName}_counter`);
 
   try {
     const counterSnap = await getDoc(counterRef);
@@ -52,6 +52,18 @@ const uploadProcessedData = async (collectionName, data) => {
   }
 };
 
+const getCollection = async (collectionName) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    
+    return data;
+  } catch (error) {
+    console.error("Error fetching collection:", error);
+    throw new Error("Could not fetch collection data.");
+  }
+};
+
 const getFirebaseApp = () => app;
 
-export { app, getFirebaseApp, uploadProcessedData };
+export { app, getFirebaseApp, uploadProcessedData, getCollection };
