@@ -26,7 +26,7 @@ export default {
     // Example of fetching friends list
     async addRole({ roleName, slug }) {
       try {
-        const response = await axios.post('http://127.0.0.1:8080/api/addRole', { role_name: roleName, slug });
+        const response = await axios.post('http://127.0.0.1:8080/api/addRole', {  roleName, slug });
         console.log(response.data);
       } catch (error) {
         console.log(error);

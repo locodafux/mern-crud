@@ -1,4 +1,5 @@
 import express from 'express';
+import { addRole } from '../controllers/RoleController.js';
 const router = express.Router();
 
 router.get('/roles/:name', (req, res) => {
@@ -9,11 +10,6 @@ router.get('/roles/:name', (req, res) => {
     res.status(200).send({ name: friends[name] });
 });
 
-router.post('/addRole', (req, res) => {
-    const { role_name, slug } = req.body;
- 
-    console.log('New role added:', role_name, slug);
-
-});
+router.post('/addRole',addRole);
 
 export default router;
