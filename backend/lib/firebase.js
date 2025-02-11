@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,8 +30,8 @@ const getNextId = async (collectionName) => {
     }
 
     await setDoc(counterRef, { lastId: newId }, { merge: true });
-
     return newId;
+    
   } catch (error) {
     console.error("Error fetching counter:", error);
     throw new Error("Could not generate document ID.");
@@ -42,14 +42,13 @@ const uploadProcessedData = async (collectionName, data) => {
   try {
     const documentId = await getNextId(collectionName);
     const documentRef = doc(db, collectionName, documentId.toString());
-
     await setDoc(documentRef, data, { merge: true });
 
     return { message: "Data uploaded successfully.", documentId };
+
   } catch (error) {
-    console.error("Error uploading data:", error);
-    return { message: "Error uploading data", error };
-  }
+
+  };
 };
 
 const getCollection = async (collectionName) => {
@@ -64,6 +63,18 @@ const getCollection = async (collectionName) => {
   }
 };
 
+const editDocument = async (collectionName,id, data) => {
+  try {
+    const documentRef = doc(db, collectionName, id);
+    await updateDoc(documentRef, data);
+
+    return { message: id +  " updated successfully" } 
+  } catch (error) {
+
+    return { message: "Failed to update date", error}
+  }
+}
+
 const getFirebaseApp = () => app;
 
-export { app, getFirebaseApp, uploadProcessedData, getCollection };
+export { app, getFirebaseApp, uploadProcessedData, getCollection, editDocument };

@@ -16,3 +16,13 @@ export const addRole = async (req, res) => {
         res.status(500).json({ message: 'Failed to add role', error: error.message });
     }
 };
+
+export const editRole = async (req, res) => {
+    const { id, roleName, slug } = req.body;
+
+    try {
+    
+    } catch (error) {
+        
+    }
+}
