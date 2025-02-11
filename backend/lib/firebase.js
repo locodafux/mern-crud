@@ -17,24 +17,37 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-  const getNextId = async (collectionName) => {
+const getNextId = async (collectionName) => {
+  try {
     const q = query(collection(db, collectionName), orderBy("id", "desc"), limit(1));
     const snapshot = await getDocs(q);
-    return snapshot.empty ? 1 : snapshot.docs[0].data().id + 1;
-  };
+
+    if (snapshot.empty) {
+      return 1; // Start from 1 if no documents exist
+    }
+
+    const latestDoc = snapshot.docs[0].data();
+    return latestDoc.id ? latestDoc.id + 1 : 1; // Ensure id exists before incrementing
+
+  } catch (error) {
+    console.error("Error getting next ID:", error);
+    throw error; // Ensure errors are properly handled
+  }
+}; 
 
 const uploadProcessedData = async (collectionName, data) => {
   try {
     const documentId = await getNextId(collectionName);
     const documentRef = doc(db, collectionName, documentId.toString());
-    await setDoc(documentRef, data, { merge: true });
+    
+    await setDoc(documentRef, { ...data, id: documentId }, { merge: true });
 
-    return { message: "Data saved successfully."};
+    return { message: "Data saved successfully.", id: documentId };
 
   } catch (error) {
-
-    return { message: "Failed to save data.", error};
-  };
+    console.error("Error saving data:", error);
+    return { message: "Failed to save data.", error };
+  }
 };
 
 const getCollection = async (collectionName) => {
