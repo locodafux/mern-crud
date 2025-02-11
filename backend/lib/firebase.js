@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, query, getDocs, collection, updateDoc, deleteDoc,orderBy, limit } from 'firebase/firestore';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,26 +17,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const getNextId = async (collectionName) => {
-  const counterRef = doc(db, "metadata", `${collectionName}_counter`);
-
-  try {
-    const counterSnap = await getDoc(counterRef);
-    let newId = 1;
-
-    if (counterSnap.exists()) {
-      const currentId = counterSnap.data().lastId;
-      newId = currentId + 1;
-    }
-
-    await setDoc(counterRef, { lastId: newId }, { merge: true });
-    return newId;
-    
-  } catch (error) {
-    console.error("Error fetching counter:", error);
-    throw new Error("Could not generate document ID.");
-  }
-};
+  const getNextId = async (collectionName) => {
+    const q = query(collection(db, collectionName), orderBy("id", "desc"), limit(1));
+    const snapshot = await getDocs(q);
+    return snapshot.empty ? 1 : snapshot.docs[0].data().id + 1;
+  };
 
 const uploadProcessedData = async (collectionName, data) => {
   try {
@@ -44,10 +29,11 @@ const uploadProcessedData = async (collectionName, data) => {
     const documentRef = doc(db, collectionName, documentId.toString());
     await setDoc(documentRef, data, { merge: true });
 
-    return { message: "Data uploaded successfully.", documentId };
+    return { message: "Data saved successfully."};
 
   } catch (error) {
 
+    return { message: "Failed to save data.", error};
   };
 };
 
@@ -63,7 +49,7 @@ const getCollection = async (collectionName) => {
   }
 };
 
-const editDocument = async (collectionName,id, data) => {
+const editDocument = async (collectionName, id, data) => {
   try {
     const documentRef = doc(db, collectionName, id);
     await updateDoc(documentRef, data);
@@ -71,10 +57,20 @@ const editDocument = async (collectionName,id, data) => {
     return { message: id +  " updated successfully" } 
   } catch (error) {
 
-    return { message: "Failed to update date", error}
+    return { message: "Failed to update data", error}
   }
+}
+
+const deleteDocument = (collectionName, id) =>  {
+    try {
+    const documentRef = doc(db, collectionName, id);
+    deleteDoc(documentRef);
+    return { message: "Data has been deleted successfully" }
+    } catch (error) {
+    return { message: "Failed to delete data", error }
+    }
 }
 
 const getFirebaseApp = () => app;
 
-export { app, getFirebaseApp, uploadProcessedData, getCollection, editDocument };
+export { app, getFirebaseApp, uploadProcessedData, getCollection, editDocument, deleteDocument };
