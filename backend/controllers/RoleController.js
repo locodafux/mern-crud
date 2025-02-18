@@ -9,6 +9,7 @@ export const getRoles = async (req, res) => {
 export const addRole = async (req, res) => {
     const { role_name, slug } = req.body;
 
+    console.log(role_name, slug);
     try {
         const msg = await uploadProcessedData('roles', { role_name , slug });
         res.json({ message: msg });
